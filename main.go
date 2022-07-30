@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func debug(values ...interface{}) {
@@ -22,7 +23,11 @@ func printWithTab(v string, level int) {
 	fmt.Printf("%s%s\n", output, v)
 }
 
-func printPath(path string, level int) {
+func printPath(path string, level int, maxLevel int) {
+	if maxLevel != -1 && level >= maxLevel {
+		return
+	}
+
 	ff, err := os.ReadDir(path)
 	if err != nil {
 		printErr(err)
@@ -36,7 +41,7 @@ func printPath(path string, level int) {
 			continue
 		}
 
-		printPath(fmt.Sprintf("%s/%s", path, n), level+1)
+		printPath(fmt.Sprintf("%s/%s", path, n), level+1, maxLevel)
 	}
 }
 
@@ -56,5 +61,15 @@ func main() {
 		dir = args[0]
 	}
 
-	printPath(dir, 0)
+	maxLevel := -1
+	if len(args) == 2 {
+		l, err := strconv.Atoi(args[1])
+		if err != nil {
+			printErr(err)
+			return
+		}
+		maxLevel = l
+	}
+
+	printPath(dir, 0, maxLevel)
 }

@@ -5,5 +5,5 @@
 ## TODO
 
 - [x] List given directory as a tree
-- [ ] Query param to determine folder level to print
+- [x] Query param to determine folder level to print
 - [ ] Respect .gitignore if it exists - should be overwritable
